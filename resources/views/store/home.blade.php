@@ -1,0 +1,260 @@
+
+@extends('layouts.store')
+
+@section('title', 'Marketplace Sasirangan')
+
+@section('content')
+    {{-- Hero --}}
+    <section class="relative overflow-hidden bg-slate-950">
+        <div class="absolute inset-0">
+            <div class="absolute -left-40 top-0 h-96 w-96 rounded-full bg-violet-700/30 blur-3xl"></div>
+            <div class="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-fuchsia-600/20 blur-3xl"></div>
+        </div>
+
+        <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-28">
+            <div>
+                <span class="inline-flex rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-2 text-sm font-semibold text-violet-200">
+                    Marketplace Sasirangan Kalimantan Selatan
+                </span>
+
+                <h1 class="mt-7 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
+                    Temukan keindahan dalam setiap
+                    <span class="text-violet-300">
+                        motif Sasirangan.
+                    </span>
+                </h1>
+
+                <p class="mt-6 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
+                    Belanja langsung dari pengrajin lokal, pelajari filosofi
+                    motif dan warna, serta kenali identitas setiap produk.
+                </p>
+
+                <form
+                    method="GET"
+                    action="{{ route('store.catalog') }}"
+                    class="mt-9 flex max-w-xl flex-col gap-3 rounded-2xl bg-white p-2 shadow-2xl sm:flex-row"
+                >
+                    <div class="relative flex-1">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.8"
+                            stroke="currentColor"
+                            class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m21 21-4.35-4.35m1.1-5.4a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"
+                            />
+                        </svg>
+
+                        <input
+                            name="search"
+                            type="search"
+                            placeholder="Cari produk, motif, atau UMKM..."
+                            class="h-12 w-full rounded-xl border-0 py-3 pl-12 pr-4 text-sm text-slate-900 focus:ring-0"
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="rounded-xl bg-violet-700 px-7 py-3 text-sm font-semibold text-white transition hover:bg-violet-800"
+                    >
+                        Cari Produk
+                    </button>
+                </form>
+            </div>
+
+            <div class="hidden lg:block">
+                <div class="relative mx-auto aspect-square max-w-md rounded-[3rem] border border-white/10 bg-gradient-to-br from-violet-600/30 to-fuchsia-500/10 p-8 backdrop-blur">
+                    <div class="flex h-full flex-col items-center justify-center rounded-[2.5rem] border border-white/10 bg-white/10 text-center">
+                        <div class="flex h-28 w-28 items-center justify-center rounded-[2rem] bg-white/10 text-violet-200">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.3"
+                                class="h-16 w-16"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M4 4h16v16H4V4Zm0 5h16M9 4v16m6-16v16M4 15h16"
+                                />
+                            </svg>
+                        </div>
+
+                        <p class="mt-6 text-xl font-bold text-white">
+                            Warisan Budaya
+                        </p>
+
+                        <p class="mt-2 max-w-xs text-sm leading-6 text-slate-300">
+                            Karya tradisional yang berkembang melalui teknologi digital.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Motif --}}
+    @if ($motifs->isNotEmpty())
+        <section class="border-b border-slate-200 bg-white">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <div class="flex items-center gap-3 overflow-x-auto pb-1">
+                    <span class="shrink-0 text-sm font-semibold text-slate-500">
+                        Jelajahi motif:
+                    </span>
+
+                    @foreach ($motifs->take(8) as $motif)
+                        <a
+                            href="{{ route('store.catalog', ['motif' => $motif]) }}"
+                            class="shrink-0 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700 transition hover:bg-violet-700 hover:text-white"
+                        >
+                            {{ $motif }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- Populer --}}
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between gap-5">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-wider text-violet-700">
+                    Pilihan populer
+                </p>
+
+                <h2 class="mt-2 text-3xl font-bold text-slate-900">
+                    Produk paling banyak dilihat
+                </h2>
+            </div>
+
+            <a
+                href="{{ route('store.catalog', ['sort' => 'popular']) }}"
+                class="hidden text-sm font-semibold text-violet-700 hover:underline sm:block"
+            >
+                Lihat semua →
+            </a>
+        </div>
+
+        <div class="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            @forelse ($popularProducts as $product)
+                @include('store.partials.product-card', ['product' => $product])
+            @empty
+                <div class="col-span-full rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-slate-500">
+                    Belum ada produk yang tersedia.
+                </div>
+            @endforelse
+        </div>
+    </section>
+
+    {{-- Tentang --}}
+    <section class="bg-violet-50">
+        <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-3 lg:px-8">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-wider text-violet-700">
+                    Mengapa SasiVerse?
+                </p>
+
+                <h2 class="mt-3 text-3xl font-bold text-slate-900">
+                    Lebih dari sekadar marketplace
+                </h2>
+            </div>
+
+            <div class="rounded-3xl bg-white p-7 shadow-sm">
+                <p class="text-lg font-bold text-slate-900">
+                    Mendukung Pengrajin Lokal
+                </p>
+
+                <p class="mt-3 text-sm leading-7 text-slate-600">
+                    Produk dipasarkan langsung oleh UMKM dan pengrajin
+                    Sasirangan yang telah terdaftar.
+                </p>
+            </div>
+
+            <div class="rounded-3xl bg-white p-7 shadow-sm">
+                <p class="text-lg font-bold text-slate-900">
+                    Identitas Produk Digital
+                </p>
+
+                <p class="mt-3 text-sm leading-7 text-slate-600">
+                    Informasi motif, filosofi, pengrajin, UPC, dan QR Code
+                    tersimpan dalam identitas setiap produk.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    {{-- Produk terbaru --}}
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between gap-5">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-wider text-violet-700">
+                    Koleksi terbaru
+                </p>
+
+                <h2 class="mt-2 text-3xl font-bold text-slate-900">
+                    Produk baru di SasiVerse
+                </h2>
+            </div>
+
+            <a
+                href="{{ route('store.catalog') }}"
+                class="hidden text-sm font-semibold text-violet-700 hover:underline sm:block"
+            >
+                Buka katalog →
+            </a>
+        </div>
+
+        <div class="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ($latestProducts as $product)
+                @include('store.partials.product-card', ['product' => $product])
+            @endforeach
+        </div>
+    </section>
+
+    {{-- UMKM --}}
+    @if ($umkms->isNotEmpty())
+        <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+            <div class="rounded-[2rem] bg-slate-900 px-6 py-10 sm:px-10">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-violet-300">
+                        Pengrajin lokal
+                    </p>
+
+                    <h2 class="mt-2 text-3xl font-bold text-white">
+                        UMKM yang bergabung
+                    </h2>
+                </div>
+
+                <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    @foreach ($umkms as $umkm)
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-500/20 font-bold text-violet-200">
+                                {{ strtoupper(substr($umkm->business_name, 0, 1)) }}
+                            </div>
+
+                            <p class="mt-4 font-bold text-white">
+                                {{ $umkm->business_name }}
+                            </p>
+
+                            <p class="mt-1 text-sm text-slate-400">
+                                {{ $umkm->owner_name }}
+                            </p>
+
+                            <p class="mt-4 text-sm font-semibold text-violet-300">
+                                {{ $umkm->products_count }} produk
+                            </p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+@endsection
