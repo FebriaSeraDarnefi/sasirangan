@@ -27,40 +27,48 @@
 <body class="min-h-screen bg-slate-50 font-sans text-slate-800">
     <main class="grid min-h-screen lg:grid-cols-2">
 
-        {{-- Bagian Informasi --}}
-        <section class="relative hidden overflow-hidden bg-gradient-to-br from-violet-950 via-violet-900 to-indigo-950 lg:flex">
-            {{-- Dekorasi latar --}}
-            <div class="absolute inset-0 opacity-20">
-                <div class="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-violet-400 blur-3xl"></div>
+        {{-- Bagian Informasi dengan Foto Sasirangan --}}
+        <section class="relative hidden min-h-screen overflow-hidden bg-slate-950 lg:flex">
+            <img
+                src="{{ asset('images/sasirangan-login.jpg') }}"
+                alt="Pemuda dan pemudi mengenakan busana Sasirangan Kalimantan Selatan"
+                class="absolute inset-0 h-full w-full object-cover object-center"
+                loading="eager"
+            >
 
-                <div class="absolute -bottom-32 -right-20 h-[28rem] w-[28rem] rounded-full bg-indigo-400 blur-3xl"></div>
-            </div>
+            {{-- Lapisan gelap agar teks tetap terbaca --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-violet-950/45 to-slate-950/95"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-violet-950/70 via-transparent to-slate-950/20"></div>
 
-            {{-- Pola dekoratif --}}
+            {{-- Cahaya dekoratif --}}
+            <div class="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-violet-500/25 blur-3xl"></div>
+            <div class="absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-fuchsia-500/15 blur-3xl"></div>
+
+            {{-- Pola Sasirangan sederhana --}}
             <div
-                class="absolute inset-0 opacity-[0.08]"
+                class="absolute inset-0 opacity-[0.06]"
                 style="
                     background-image:
                         linear-gradient(45deg, #ffffff 25%, transparent 25%),
                         linear-gradient(-45deg, #ffffff 25%, transparent 25%),
                         linear-gradient(45deg, transparent 75%, #ffffff 75%),
                         linear-gradient(-45deg, transparent 75%, #ffffff 75%);
-                    background-size: 48px 48px;
+                    background-size: 56px 56px;
                     background-position:
                         0 0,
-                        0 24px,
-                        24px -24px,
-                        -24px 0;
+                        0 28px,
+                        28px -28px,
+                        -28px 0;
                 "
             ></div>
 
-            <div class="relative z-10 flex w-full flex-col justify-between p-12 xl:p-16">
+            <div class="relative z-10 flex w-full flex-col justify-between p-10 xl:p-16">
                 {{-- Logo --}}
                 <a
                     href="{{ url('/') }}"
                     class="flex w-fit items-center gap-3 text-white"
                 >
-                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 shadow-lg ring-1 ring-white/20 backdrop-blur">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/15 shadow-xl backdrop-blur-md">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -88,7 +96,7 @@
                             SasiVerse
                         </p>
 
-                        <p class="text-xs text-violet-200">
+                        <p class="text-xs text-violet-100/80">
                             Warisan Budaya dalam Dunia Digital
                         </p>
                     </div>
@@ -96,109 +104,62 @@
 
                 {{-- Hero --}}
                 <div class="max-w-xl">
-                    <span class="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-violet-100 backdrop-blur">
-                        Marketplace Sasirangan Indonesia
+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
+                        <span class="h-2 w-2 rounded-full bg-violet-300"></span>
+                        Marketplace Sasirangan Kalimantan Selatan
                     </span>
 
-                    <h1 class="mt-7 text-4xl font-bold leading-tight text-white xl:text-5xl">
-                        Mengenal, menjaga, dan mendukung karya
+                    <h1 class="mt-6 text-4xl font-bold leading-tight text-white xl:text-5xl">
+                        Pesona Sasirangan dalam setiap
                         <span class="text-violet-300">
-                            Sasirangan.
+                            karya dan cerita.
                         </span>
                     </h1>
 
-                    <p class="mt-6 max-w-lg text-base leading-8 text-violet-100/80">
-                        Temukan produk Sasirangan, kenali filosofi setiap motif,
-                        dan dukung para pengrajin lokal Kalimantan Selatan.
+                    <p class="mt-5 max-w-lg text-base leading-8 text-slate-100/85">
+                        Temukan produk asli, kenali filosofi motif, dan dukung
+                        pengrajin lokal untuk terus tumbuh di era digital.
                     </p>
 
-                    <div class="mt-10 grid gap-4 sm:grid-cols-3">
-                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.8"
-                                    stroke="currentColor"
-                                    class="h-5 w-5 text-violet-200"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5"
-                                    />
-                                </svg>
-                            </div>
-
-                            <p class="mt-3 text-sm font-semibold text-white">
-                                Produk Lokal
+                    <div class="mt-8 grid gap-3 sm:grid-cols-3">
+                        <div class="rounded-2xl border border-white/15 bg-black/20 p-4 backdrop-blur-md">
+                            <p class="text-2xl font-bold text-white">
+                                Lokal
                             </p>
-
-                            <p class="mt-1 text-xs leading-5 text-violet-200">
-                                Karya pengrajin terpercaya.
+                            <p class="mt-1 text-xs leading-5 text-slate-200/80">
+                                Langsung dari pengrajin.
                             </p>
                         </div>
 
-                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.8"
-                                    stroke="currentColor"
-                                    class="h-5 w-5 text-violet-200"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M3.75 4.5h16.5v15H3.75v-15Zm4.5 0v15m7.5-15v15M3.75 9h16.5m-16.5 6h16.5"
-                                    />
-                                </svg>
-                            </div>
-
-                            <p class="mt-3 text-sm font-semibold text-white">
-                                UPC & QR Code
+                        <div class="rounded-2xl border border-white/15 bg-black/20 p-4 backdrop-blur-md">
+                            <p class="text-2xl font-bold text-white">
+                                Digital
                             </p>
-
-                            <p class="mt-1 text-xs leading-5 text-violet-200">
-                                Identitas produk digital.
+                            <p class="mt-1 text-xs leading-5 text-slate-200/80">
+                                UPC dan QR produk.
                             </p>
                         </div>
 
-                        <div class="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.8"
-                                    stroke="currentColor"
-                                    class="h-5 w-5 text-violet-200"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M12 6.75a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 0V3m0 16.5V21m5.25-9.75H21m-18 0h3.75"
-                                    />
-                                </svg>
-                            </div>
-
-                            <p class="mt-3 text-sm font-semibold text-white">
-                                Edukasi Budaya
+                        <div class="rounded-2xl border border-white/15 bg-black/20 p-4 backdrop-blur-md">
+                            <p class="text-2xl font-bold text-white">
+                                Budaya
                             </p>
-
-                            <p class="mt-1 text-xs leading-5 text-violet-200">
-                                Kenali motif dan filosofinya.
+                            <p class="mt-1 text-xs leading-5 text-slate-200/80">
+                                Motif penuh filosofi.
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <p class="text-sm text-violet-200/70">
-                    © {{ date('Y') }} SasiVerse. Melestarikan budaya melalui teknologi.
-                </p>
+                <div class="flex items-center justify-between gap-4 text-xs text-slate-200/70">
+                    <p>
+                        © {{ date('Y') }} SasiVerse
+                    </p>
+
+                    <p class="rounded-full border border-white/15 bg-black/20 px-3 py-1.5 backdrop-blur-md">
+                        Sasirangan • Kalimantan Selatan
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -238,6 +199,26 @@
             </a>
 
             <div class="w-full max-w-md">
+                {{-- Foto Sasirangan pada tampilan mobile --}}
+                <div class="relative mb-8 mt-14 overflow-hidden rounded-3xl shadow-xl lg:hidden">
+                    <img
+                        src="{{ asset('images/sasirangan-login.jpg') }}"
+                        alt="Pemuda dan pemudi mengenakan busana Sasirangan"
+                        class="h-48 w-full object-cover object-center"
+                    >
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-5 text-white">
+                        <p class="text-sm font-semibold text-violet-200">
+                            Warisan Budaya Kalimantan Selatan
+                        </p>
+
+                        <p class="mt-1 text-lg font-bold">
+                            Sasirangan tumbuh bersama teknologi.
+                        </p>
+                    </div>
+                </div>
                 <div class="mb-8">
                     <p class="text-sm font-semibold text-violet-700">
                         Selamat datang kembali

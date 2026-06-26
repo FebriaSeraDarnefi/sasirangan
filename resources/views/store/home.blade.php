@@ -67,33 +67,42 @@
                 </form>
             </div>
 
-            <div class="hidden lg:block">
-                <div class="relative mx-auto aspect-square max-w-md rounded-[3rem] border border-white/10 bg-gradient-to-br from-violet-600/30 to-fuchsia-500/10 p-8 backdrop-blur">
-                    <div class="flex h-full flex-col items-center justify-center rounded-[2.5rem] border border-white/10 bg-white/10 text-center">
-                        <div class="flex h-28 w-28 items-center justify-center rounded-[2rem] bg-white/10 text-violet-200">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.3"
-                                class="h-16 w-16"
+            {{-- Foto utama Sasirangan --}}
+            <div>
+                <div class="relative mx-auto max-w-xl">
+                    {{-- Bingkai dekoratif --}}
+                    <div class="absolute -inset-4 rounded-[2.75rem] bg-gradient-to-br from-violet-500/25 via-fuchsia-500/10 to-transparent blur-2xl"></div>
+
+                    <div class="relative overflow-hidden rounded-[2.5rem] border border-white/15 bg-white/5 shadow-2xl shadow-violet-950/40">
+                        <div class="aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3]">
+                            <img
+                                src="{{ asset('images/sasirangan-hero.jpg') }}"
+                                alt="Pertunjukan kain Sasirangan Kalimantan Selatan"
+                                class="h-full w-full object-cover object-center transition duration-700 hover:scale-105"
+                                loading="eager"
+                                fetchpriority="high"
                             >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M4 4h16v16H4V4Zm0 5h16M9 4v16m6-16v16M4 15h16"
-                                />
-                            </svg>
                         </div>
 
-                        <p class="mt-6 text-xl font-bold text-white">
-                            Warisan Budaya
-                        </p>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent"></div>
+                        <div class="absolute inset-0 ring-1 ring-inset ring-white/10"></div>
 
-                        <p class="mt-2 max-w-xs text-sm leading-6 text-slate-300">
-                            Karya tradisional yang berkembang melalui teknologi digital.
-                        </p>
+                        <div class="absolute right-5 top-5 rounded-full border border-white/20 bg-black/30 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md">
+                            Sasirangan • Kalsel
+                        </div>
+
+                        <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                            <div class="max-w-md rounded-2xl border border-white/15 bg-black/25 p-5 backdrop-blur-md">
+                                <p class="text-xl font-bold text-white sm:text-2xl">
+                                    Warisan Budaya
+                                </p>
+
+                                <p class="mt-2 text-sm leading-6 text-slate-200">
+                                    Karya tradisional yang berkembang melalui
+                                    teknologi digital dan kreativitas generasi muda.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
