@@ -29,6 +29,9 @@ Route::get('/', [StoreController::class, 'home'])
 Route::get('/produk', [StoreController::class, 'catalog'])
     ->name('store.catalog');
 
+Route::get('/edukasi', [StoreController::class, 'education'])
+    ->name('store.education');
+
 Route::get('/produk/{product:slug}', [StoreController::class, 'show'])
     ->name('store.product.show');
 

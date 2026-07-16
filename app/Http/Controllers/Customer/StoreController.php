@@ -45,6 +45,11 @@ class StoreController extends Controller
         ));
     }
 
+    public function education(): View
+    {
+        return view('store.education');
+    }
+
     public function catalog(Request $request): View
     {
         $productsQuery = $this->activeProducts();

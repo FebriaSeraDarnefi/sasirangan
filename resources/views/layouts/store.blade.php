@@ -104,6 +104,16 @@
                     Katalog
                 </a>
 
+                <a
+                    href="{{ route('store.education') }}"
+                    class="text-sm font-semibold transition
+                        {{ request()->routeIs('store.education')
+                            ? 'text-violet-700'
+                            : 'text-slate-600 hover:text-violet-700' }}"
+                >
+                    Edukasi
+                </a>
+
                 @auth
                     @if (
                         auth()->user()->isCustomer()
@@ -268,6 +278,17 @@
                     Katalog
                 </a>
 
+
+                <a
+                    href="{{ route('store.education') }}"
+                    class="whitespace-nowrap text-sm font-semibold
+                        {{ request()->routeIs('store.education')
+                            ? 'text-violet-700'
+                            : 'text-slate-600' }}"
+                >
+                    Edukasi
+                </a>
+
                 @auth
                     @if (
                         auth()->user()->isCustomer()
@@ -330,6 +351,14 @@
                         class="block transition hover:text-white"
                     >
                         Katalog Produk
+                    </a>
+
+
+                    <a
+                        href="{{ route('store.education') }}"
+                        class="block transition hover:text-white"
+                    >
+                        Edukasi Sasirangan
                     </a>
 
                     @auth

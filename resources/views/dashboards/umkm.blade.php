@@ -441,6 +441,10 @@
             </div>
         </section>
 
+        <x-product-visitor-analytics
+            :analytics="$visitorAnalytics"
+        />
+
         {{-- Akses cepat --}}
         <section class="mt-8">
             <div class="mb-5">

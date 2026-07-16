@@ -175,6 +175,11 @@
         @endif
     </div>
 
+    <x-product-visitor-analytics
+        :analytics="$visitorAnalytics"
+        :show-umkm="true"
+    />
+
     {{-- Pesanan terbaru --}}
     <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="flex flex-col justify-between gap-4 border-b border-slate-200 px-6 py-5 sm:flex-row sm:items-center">
@@ -318,4 +323,3 @@
         </div>
     </div>
 @endsection
-
