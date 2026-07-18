@@ -230,7 +230,7 @@
                             </p>
 
                             <p class="mt-1 text-lg font-bold text-slate-900">
-                                {{ config('payment.bank_name') }}
+{{ $umkm?->bank_name ?: config('payment.bank_name') }}
                             </p>
                         </div>
 
@@ -240,7 +240,7 @@
                             </p>
 
                             <p class="mt-1 break-all font-mono text-xl font-bold text-violet-700">
-                                {{ config('payment.account_number') }}
+{{ $umkm?->bank_account_number ?: config('payment.account_number') }}
                             </p>
                         </div>
 
@@ -250,8 +250,7 @@
                             </p>
 
                             <p class="mt-1 font-bold text-slate-900">
-                                {{ config('payment.account_holder') }}
-                            </p>
+{{ $umkm?->bank_account_name ?: config('payment.account_holder') }}                            </p>
                         </div>
                     </div>
                 </div>
