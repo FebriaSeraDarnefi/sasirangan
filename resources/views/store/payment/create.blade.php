@@ -7,7 +7,7 @@
         $existingPayment = $order->payment;
     @endphp
 
-    <section class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         {{-- Breadcrumb --}}
         <div class="mb-7 flex flex-wrap items-center gap-2 text-sm text-slate-500">
             <a
@@ -33,8 +33,8 @@
             </span>
         </div>
 
-        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
-            {{-- Form upload --}}
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+            {{-- Form upload bukti pembayaran --}}
             <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                 <p class="text-sm font-semibold uppercase tracking-wider text-violet-700">
                     Pembayaran Manual
@@ -45,9 +45,45 @@
                 </h1>
 
                 <p class="mt-3 leading-7 text-slate-500">
-                    Pastikan pembayaran sudah ditransfer ke rekening SasiVerse
-                    sebelum mengunggah bukti pembayaran.
+                    Transfer pembayaran ke rekening UMKM yang tercantum pada
+                    bagian rekening tujuan, kemudian unggah bukti transfer.
                 </p>
+
+                @if ($paymentGroups->count() > 1)
+                    <div class="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+                        <p class="font-bold text-blue-800">
+                            Pesanan berisi beberapa UMKM
+                        </p>
+
+                        <p class="mt-2 text-sm leading-6 text-blue-700">
+                            Lakukan transfer ke setiap rekening UMKM sesuai
+                            nominal yang tercantum. Gabungkan seluruh bukti
+                            transfer menjadi satu gambar sebelum diunggah.
+                        </p>
+                    </div>
+                @endif
+
+                @if ($hasIncompleteBankDetails)
+                    <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5">
+                        <p class="font-bold text-red-700">
+                            Rekening UMKM belum lengkap
+                        </p>
+
+                        <p class="mt-2 text-sm leading-6 text-red-600">
+                            Pembayaran belum dapat dilakukan karena terdapat
+                            UMKM yang belum melengkapi nama bank, nomor
+                            rekening, atau nama pemilik rekening.
+                        </p>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5">
+                        <p class="text-sm font-semibold text-red-700">
+                            {{ session('error') }}
+                        </p>
+                    </div>
+                @endif
 
                 @if ($order->payment_status === 'rejected')
                     <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5">
@@ -70,7 +106,9 @@
 
                         <ul class="mt-2 list-inside list-disc space-y-1">
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                <li>
+                                    {{ $error }}
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -89,7 +127,7 @@
                             for="account_holder_name"
                             class="mb-2 block text-sm font-semibold text-slate-700"
                         >
-                            Nama Pemilik Rekening
+                            Nama Pemilik Rekening Pengirim
                             <span class="text-red-500">*</span>
                         </label>
 
@@ -103,9 +141,14 @@
                             ) }}"
                             required
                             maxlength="255"
-                            placeholder="Nama yang digunakan saat transfer"
+                            placeholder="Nama pemilik rekening yang digunakan untuk transfer"
                             class="w-full rounded-xl border-slate-300 shadow-sm focus:border-violet-500 focus:ring-violet-500"
                         >
+
+                        <p class="mt-2 text-xs leading-5 text-slate-500">
+                            Masukkan nama pemilik rekening customer yang
+                            digunakan saat melakukan transfer.
+                        </p>
 
                         @error('account_holder_name')
                             <p class="mt-2 text-sm text-red-600">
@@ -148,7 +191,7 @@
                         <label
                             class="mb-2 block text-sm font-semibold text-slate-700"
                         >
-                            Jumlah Pembayaran
+                            Total Pembayaran
                         </label>
 
                         <div class="rounded-xl border border-violet-200 bg-violet-50 px-5 py-4">
@@ -162,7 +205,8 @@
                             </p>
 
                             <p class="mt-1 text-xs text-violet-700/70">
-                                Jumlah pembayaran diambil otomatis dari total pesanan.
+                                Total pembayaran sesuai dengan jumlah seluruh
+                                produk dalam pesanan.
                             </p>
                         </div>
                     </div>
@@ -182,7 +226,8 @@
                             name="payment_proof"
                             accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                             required
-                            class="block w-full rounded-xl border border-slate-300 bg-white text-sm text-slate-600 file:mr-4 file:border-0 file:bg-violet-100 file:px-5 file:py-3 file:font-semibold file:text-violet-700 hover:file:bg-violet-200"
+                            @disabled($hasIncompleteBankDetails)
+                            class="block w-full rounded-xl border border-slate-300 bg-white text-sm text-slate-600 file:mr-4 file:border-0 file:bg-violet-100 file:px-5 file:py-3 file:font-semibold file:text-violet-700 hover:file:bg-violet-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-60"
                         >
 
                         <p class="mt-2 text-xs leading-5 text-slate-500">
@@ -198,13 +243,25 @@
                     </div>
 
                     <div class="flex flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row">
-                        <button
-                            type="submit"
-                            onclick="return confirm('Kirim bukti pembayaran untuk diverifikasi Admin?')"
-                            class="flex flex-1 items-center justify-center rounded-xl bg-violet-700 px-6 py-4 font-semibold text-white transition hover:bg-violet-800"
-                        >
-                            Kirim Bukti Pembayaran
-                        </button>
+                        @if ($hasIncompleteBankDetails)
+                            <button
+                                type="button"
+                                disabled
+                                class="flex flex-1 cursor-not-allowed items-center justify-center rounded-xl bg-slate-300 px-6 py-4 font-semibold text-slate-500"
+                            >
+                                Rekening UMKM Belum Lengkap
+                            </button>
+                        @else
+                            <button
+                                type="submit"
+                                onclick="return confirm(
+                                    'Kirim bukti pembayaran untuk diverifikasi Admin?'
+                                )"
+                                class="flex flex-1 items-center justify-center rounded-xl bg-violet-700 px-6 py-4 font-semibold text-white transition hover:bg-violet-800"
+                            >
+                                Kirim Bukti Pembayaran
+                            </button>
+                        @endif
 
                         <a
                             href="{{ route('customer.checkout.success', $order) }}"
@@ -223,35 +280,136 @@
                         Rekening Tujuan
                     </p>
 
-                    <div class="mt-5 space-y-5 rounded-2xl bg-white p-5 shadow-sm">
-                        <div>
-                            <p class="text-sm text-slate-500">
-                                Bank
-                            </p>
+                    <p class="mt-2 text-sm leading-6 text-violet-700/80">
+                        Transfer sesuai nominal pada masing-masing UMKM.
+                    </p>
 
-                            <p class="mt-1 text-lg font-bold text-slate-900">
-{{ $umkm?->bank_name ?: config('payment.bank_name') }}
-                            </p>
-                        </div>
+                    <div class="mt-5 space-y-4">
+                        @forelse ($paymentGroups as $group)
+                            @php
+                                $umkm = $group['umkm'];
+                                $items = $group['items'];
+                                $groupSubtotal = $group['subtotal'];
 
-                        <div class="border-t border-slate-100 pt-5">
-                            <p class="text-sm text-slate-500">
-                                Nomor Rekening
-                            </p>
+                                $bankComplete = $umkm
+                                    && filled($umkm->bank_name)
+                                    && filled($umkm->bank_account_number)
+                                    && filled($umkm->bank_account_name);
+                            @endphp
 
-                            <p class="mt-1 break-all font-mono text-xl font-bold text-violet-700">
-{{ $umkm?->bank_account_number ?: config('payment.account_number') }}
-                            </p>
-                        </div>
+                            <div class="rounded-2xl bg-white p-5 shadow-sm">
+                                <div class="border-b border-slate-100 pb-4">
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                                        UMKM
+                                    </p>
 
-                        <div class="border-t border-slate-100 pt-5">
-                            <p class="text-sm text-slate-500">
-                                Atas Nama
-                            </p>
+                                    <p class="mt-1 text-lg font-bold text-slate-900">
+                                        {{ $umkm?->business_name
+                                            ?: 'UMKM tidak ditemukan' }}
+                                    </p>
+                                </div>
 
-                            <p class="mt-1 font-bold text-slate-900">
-{{ $umkm?->bank_account_name ?: config('payment.account_holder') }}                            </p>
-                        </div>
+                                @if ($bankComplete)
+                                    <div class="mt-4 space-y-4">
+                                        <div>
+                                            <p class="text-sm text-slate-500">
+                                                Bank
+                                            </p>
+
+                                            <p class="mt-1 font-bold text-slate-900">
+                                                {{ $umkm->bank_name }}
+                                            </p>
+                                        </div>
+
+                                        <div class="border-t border-slate-100 pt-4">
+                                            <p class="text-sm text-slate-500">
+                                                Nomor Rekening
+                                            </p>
+
+                                            <p class="mt-1 break-all font-mono text-xl font-bold text-violet-700">
+                                                {{ $umkm->bank_account_number }}
+                                            </p>
+                                        </div>
+
+                                        <div class="border-t border-slate-100 pt-4">
+                                            <p class="text-sm text-slate-500">
+                                                Atas Nama
+                                            </p>
+
+                                            <p class="mt-1 font-bold text-slate-900">
+                                                {{ $umkm->bank_account_name }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+                                        <p class="text-sm font-semibold text-red-700">
+                                            Informasi rekening UMKM belum
+                                            dilengkapi.
+                                        </p>
+                                    </div>
+                                @endif
+
+                                <div class="mt-5 border-t border-slate-100 pt-4">
+                                    <p class="text-sm text-slate-500">
+                                        Nominal Transfer
+                                    </p>
+
+                                    <p class="mt-1 text-xl font-bold text-violet-700">
+                                        Rp{{ number_format(
+                                            $groupSubtotal,
+                                            0,
+                                            ',',
+                                            '.'
+                                        ) }}
+                                    </p>
+                                </div>
+
+                                <details class="mt-4 border-t border-slate-100 pt-4">
+                                    <summary class="cursor-pointer text-sm font-semibold text-slate-700">
+                                        Lihat produk
+                                    </summary>
+
+                                    <div class="mt-3 space-y-2">
+                                        @foreach ($items as $item)
+                                            <div class="flex items-start justify-between gap-3 text-sm">
+                                                <div>
+                                                    <p class="font-medium text-slate-700">
+                                                        {{ $item->product_name }}
+                                                    </p>
+
+                                                    <p class="text-xs text-slate-500">
+                                                        {{ $item->quantity }}
+                                                        ×
+                                                        Rp{{ number_format(
+                                                            (float) $item->price,
+                                                            0,
+                                                            ',',
+                                                            '.'
+                                                        ) }}
+                                                    </p>
+                                                </div>
+
+                                                <p class="shrink-0 font-semibold text-slate-800">
+                                                    Rp{{ number_format(
+                                                        (float) $item->subtotal,
+                                                        0,
+                                                        ',',
+                                                        '.'
+                                                    ) }}
+                                                </p>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </details>
+                            </div>
+                        @empty
+                            <div class="rounded-2xl border border-red-200 bg-red-50 p-5">
+                                <p class="text-sm font-semibold text-red-700">
+                                    Data UMKM pada pesanan tidak ditemukan.
+                                </p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 
@@ -286,8 +444,8 @@
                     </p>
 
                     <p class="mt-2 text-sm leading-6 text-amber-700">
-                        Pastikan nomor rekening, nominal transfer, dan foto
-                        bukti pembayaran terlihat jelas.
+                        Pastikan rekening tujuan, nominal transfer, dan foto
+                        bukti pembayaran sudah benar serta terlihat jelas.
                     </p>
                 </div>
             </aside>
