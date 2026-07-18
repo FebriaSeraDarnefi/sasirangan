@@ -32,7 +32,13 @@ Route::get('/produk', [StoreController::class, 'catalog'])
 
 Route::get('/edukasi', [StoreController::class, 'education'])
     ->name('store.education');
-
+    
+Route::get(
+    '/pengrajin/{umkm}',
+    [StoreController::class, 'umkmProfile']
+)
+    ->whereNumber('umkm')
+    ->name('store.umkm.show');
 Route::get('/produk/{product:slug}', [StoreController::class, 'show'])
     ->name('store.product.show');
 

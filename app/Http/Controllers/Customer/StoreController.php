@@ -25,14 +25,22 @@ class StoreController extends Controller
             ->take(8)
             ->get();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Semua UMKM aktif
+        |--------------------------------------------------------------------------
+        |
+        | Tidak lagi menggunakan take(4), sehingga seluruh UMKM aktif akan
+        | ditampilkan pada halaman utama.
+        |
+        */
         $umkms = Umkm::query()
             ->withCount([
                 'products' => fn (Builder $query) => $query
                     ->where('status', 'active'),
             ])
             ->where('verification_status', 'active')
-            ->latest()
-            ->take(4)
+            ->orderBy('business_name')
             ->get();
 
         $motifs = $this->getMotifs();
@@ -55,38 +63,103 @@ class StoreController extends Controller
         $productsQuery = $this->activeProducts();
 
         $productsQuery
-            ->when($request->filled('search'), function (Builder $query) use ($request) {
-                $search = trim((string) $request->input('search'));
+            ->when(
+                $request->filled('search'),
+                function (Builder $query) use ($request): void {
+                    $search = trim(
+                        (string) $request->input('search')
+                    );
 
-                $query->where(function (Builder $query) use ($search) {
-                    $query
-                        ->where('name', 'like', "%{$search}%")
-                        ->orWhere('motif_name', 'like', "%{$search}%")
-                        ->orWhere('material', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%")
-                        ->orWhereHas('umkm', function (Builder $query) use ($search) {
-                            $query->where('business_name', 'like', "%{$search}%");
-                        });
-                });
-            })
-            ->when($request->filled('motif'), function (Builder $query) use ($request) {
-                $query->where('motif_name', $request->input('motif'));
-            })
-            ->when($request->filled('material'), function (Builder $query) use ($request) {
-                $query->where('material', $request->input('material'));
-            })
-            ->when($request->filled('min_price'), function (Builder $query) use ($request) {
-                $query->where('price', '>=', $request->integer('min_price'));
-            })
-            ->when($request->filled('max_price'), function (Builder $query) use ($request) {
-                $query->where('price', '<=', $request->integer('max_price'));
-            });
+                    $query->where(
+                        function (Builder $query) use ($search): void {
+                            $query
+                                ->where(
+                                    'name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'motif_name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'material',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'description',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhereHas(
+                                    'umkm',
+                                    function (
+                                        Builder $query
+                                    ) use ($search): void {
+                                        $query->where(
+                                            'business_name',
+                                            'like',
+                                            "%{$search}%"
+                                        );
+                                    }
+                                );
+                        }
+                    );
+                }
+            )
+            ->when(
+                $request->filled('motif'),
+                function (Builder $query) use ($request): void {
+                    $query->where(
+                        'motif_name',
+                        $request->input('motif')
+                    );
+                }
+            )
+            ->when(
+                $request->filled('material'),
+                function (Builder $query) use ($request): void {
+                    $query->where(
+                        'material',
+                        $request->input('material')
+                    );
+                }
+            )
+            ->when(
+                $request->filled('min_price'),
+                function (Builder $query) use ($request): void {
+                    $query->where(
+                        'price',
+                        '>=',
+                        $request->integer('min_price')
+                    );
+                }
+            )
+            ->when(
+                $request->filled('max_price'),
+                function (Builder $query) use ($request): void {
+                    $query->where(
+                        'price',
+                        '<=',
+                        $request->integer('max_price')
+                    );
+                }
+            );
 
         match ($request->input('sort')) {
             'oldest' => $productsQuery->oldest(),
-            'price_low' => $productsQuery->orderBy('price'),
-            'price_high' => $productsQuery->orderByDesc('price'),
-            'popular' => $productsQuery->orderByDesc('view_count'),
+
+            'price_low' => $productsQuery
+                ->orderBy('price'),
+
+            'price_high' => $productsQuery
+                ->orderByDesc('price'),
+
+            'popular' => $productsQuery
+                ->orderByDesc('view_count'),
+
             default => $productsQuery->latest(),
         };
 
@@ -111,6 +184,87 @@ class StoreController extends Controller
         ));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Profil dan katalog UMKM
+    |--------------------------------------------------------------------------
+    */
+    public function umkmProfile(
+        Request $request,
+        Umkm $umkm
+    ): View {
+        /*
+        | Profil UMKM yang belum aktif tidak dapat dibuka oleh publik.
+        */
+        abort_unless(
+            $umkm->verification_status === 'active',
+            404
+        );
+
+        $productsQuery = Product::query()
+            ->with('umkm')
+            ->where('umkm_id', $umkm->id)
+            ->where('status', 'active')
+            ->when(
+                $request->filled('search'),
+                function (Builder $query) use ($request): void {
+                    $search = trim(
+                        (string) $request->input('search')
+                    );
+
+                    $query->where(
+                        function (Builder $query) use ($search): void {
+                            $query
+                                ->where(
+                                    'name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'motif_name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'material',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'description',
+                                    'like',
+                                    "%{$search}%"
+                                );
+                        }
+                    );
+                }
+            );
+
+        match ($request->input('sort')) {
+            'oldest' => $productsQuery->oldest(),
+
+            'price_low' => $productsQuery
+                ->orderBy('price'),
+
+            'price_high' => $productsQuery
+                ->orderByDesc('price'),
+
+            'popular' => $productsQuery
+                ->orderByDesc('view_count'),
+
+            default => $productsQuery->latest(),
+        };
+
+        $products = $productsQuery
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('store.umkm-profile', compact(
+            'umkm',
+            'products'
+        ));
+    }
+
     public function show(Product $product): View
     {
         $product->load([
@@ -128,7 +282,7 @@ class StoreController extends Controller
         $sessionKey = "viewed_products.{$product->id}";
 
         if (! session()->has($sessionKey)) {
-            DB::transaction(function () use ($product) {
+            DB::transaction(function () use ($product): void {
                 ProductView::create([
                     'product_id' => $product->id,
                     'user_id' => auth()->id(),
@@ -141,13 +295,22 @@ class StoreController extends Controller
 
             session()->put($sessionKey, true);
         }
+
         $relatedProducts = $this->activeProducts()
             ->where('products.id', '!=', $product->id)
-            ->where(function (Builder $query) use ($product) {
-                $query
-                    ->where('motif_name', $product->motif_name)
-                    ->orWhere('umkm_id', $product->umkm_id);
-            })
+            ->where(
+                function (Builder $query) use ($product): void {
+                    $query
+                        ->where(
+                            'motif_name',
+                            $product->motif_name
+                        )
+                        ->orWhere(
+                            'umkm_id',
+                            $product->umkm_id
+                        );
+                }
+            )
             ->take(4)
             ->get();
 
@@ -162,9 +325,15 @@ class StoreController extends Controller
         return Product::query()
             ->with('umkm')
             ->where('status', 'active')
-            ->whereHas('umkm', function (Builder $query) {
-                $query->where('verification_status', 'active');
-            });
+            ->whereHas(
+                'umkm',
+                function (Builder $query): void {
+                    $query->where(
+                        'verification_status',
+                        'active'
+                    );
+                }
+            );
     }
 
     private function getMotifs()
