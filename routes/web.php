@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\UmkmVerificationController;
@@ -71,7 +72,10 @@ Route::get('/dashboard', function () {
         'admin' => redirect()->route('admin.dashboard'),
         'umkm' => redirect()->route('umkm.dashboard'),
         'customer' => redirect()->route('customer.dashboard'),
-        default => abort(403, 'Role pengguna tidak dikenali.'),
+        default => abort(
+            403,
+            'Role pengguna tidak dikenali.'
+        ),
     };
 })
     ->middleware('auth')
@@ -137,7 +141,9 @@ Route::middleware([
     Route::get(
         '/checkout/berhasil/{order}',
         [CheckoutController::class, 'success']
-    )->name('customer.checkout.success');
+    )
+        ->whereNumber('order')
+        ->name('customer.checkout.success');
 
     /*
     |--------------------------------------------------------------------------
@@ -145,29 +151,27 @@ Route::middleware([
     |--------------------------------------------------------------------------
     */
 
-   Route::get(
-    '/pesanan',
-    [OrderController::class, 'index']
-)->name('customer.orders.index');
+    Route::get(
+        '/pesanan',
+        [OrderController::class, 'index']
+    )->name('customer.orders.index');
 
-Route::get(
-    '/pesanan/{order}',
-    [OrderController::class, 'show']
-)
-    ->whereNumber('order')
-    ->name('customer.orders.show');
+    Route::get(
+        '/pesanan/{order}',
+        [OrderController::class, 'show']
+    )
+        ->whereNumber('order')
+        ->name('customer.orders.show');
 
-Route::patch(
-    '/pesanan/{order}/pengiriman/{fulfillment}/diterima',
-    [OrderController::class, 'completeFulfillment']
-)
-    ->whereNumber('order')
-    ->whereNumber('fulfillment')
-    ->name('customer.orders.fulfillments.complete');
-
+    Route::patch(
+        '/pesanan/{order}/pengiriman/{fulfillment}/diterima',
+        [OrderController::class, 'completeFulfillment']
+    )
+        ->whereNumber('order')
+        ->whereNumber('fulfillment')
+        ->name('customer.orders.fulfillments.complete');
 
     /*
-
     |--------------------------------------------------------------------------
     | Pembayaran Customer
     |--------------------------------------------------------------------------
@@ -176,12 +180,16 @@ Route::patch(
     Route::get(
         '/pesanan/{order}/pembayaran',
         [PaymentController::class, 'create']
-    )->name('customer.payment.create');
+    )
+        ->whereNumber('order')
+        ->name('customer.payment.create');
 
     Route::post(
         '/pesanan/{order}/pembayaran',
         [PaymentController::class, 'store']
-    )->name('customer.payment.store');
+    )
+        ->whereNumber('order')
+        ->name('customer.payment.store');
 });
 
 /*
@@ -197,10 +205,28 @@ Route::prefix('admin')
         'role:admin',
     ])
     ->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | Dashboard Admin
+        |--------------------------------------------------------------------------
+        */
+
         Route::get(
             '/dashboard',
             [AdminDashboardController::class, 'index']
         )->name('dashboard');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Daftar Customer
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/customers',
+            [CustomerController::class, 'index']
+        )->name('customers.index');
+
         /*
         |--------------------------------------------------------------------------
         | Verifikasi Pembayaran
@@ -247,22 +273,30 @@ Route::prefix('admin')
         Route::get(
             '/umkms/{umkm}',
             [UmkmVerificationController::class, 'show']
-        )->name('umkms.show');
+        )
+            ->whereNumber('umkm')
+            ->name('umkms.show');
 
         Route::patch(
             '/umkms/{umkm}/approve',
             [UmkmVerificationController::class, 'approve']
-        )->name('umkms.approve');
+        )
+            ->whereNumber('umkm')
+            ->name('umkms.approve');
 
         Route::patch(
             '/umkms/{umkm}/reject',
             [UmkmVerificationController::class, 'reject']
-        )->name('umkms.reject');
+        )
+            ->whereNumber('umkm')
+            ->name('umkms.reject');
 
         Route::patch(
             '/umkms/{umkm}/deactivate',
             [UmkmVerificationController::class, 'deactivate']
-        )->name('umkms.deactivate');
+        )
+            ->whereNumber('umkm')
+            ->name('umkms.deactivate');
     });
 
 /*

@@ -39,26 +39,35 @@
         </p>
 
         {{-- Menu cepat --}}
-        <div class="mt-6 flex flex-wrap gap-3">
-            @if (Route::has('admin.umkms.index'))
-                <a
-                    href="{{ route('admin.umkms.index') }}"
-                    class="inline-flex items-center justify-center rounded-xl border border-violet-200 bg-violet-50 px-5 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100"
-                >
-                    Verifikasi UMKM
-                </a>
-            @endif
+       {{-- Menu cepat --}}
+<div class="mt-6 flex flex-wrap gap-3">
+    @if (Route::has('admin.customers.index'))
+        <a
+            href="{{ route('admin.customers.index') }}"
+            class="inline-flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+        >
+            Daftar Customer
+        </a>
+    @endif
 
-            @if (Route::has('admin.payments.index'))
-                <a
-                    href="{{ route('admin.payments.index') }}"
-                    class="inline-flex items-center justify-center rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-800"
-                >
-                    Verifikasi Pembayaran
-                </a>
-            @endif
-        </div>
-    </div>
+    @if (Route::has('admin.umkms.index'))
+        <a
+            href="{{ route('admin.umkms.index') }}"
+            class="inline-flex items-center justify-center rounded-xl border border-violet-200 bg-violet-50 px-5 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100"
+        >
+            Verifikasi UMKM
+        </a>
+    @endif
+
+    @if (Route::has('admin.payments.index'))
+        <a
+            href="{{ route('admin.payments.index') }}"
+            class="inline-flex items-center justify-center rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-800"
+        >
+            Verifikasi Pembayaran
+        </a>
+    @endif
+</div>
 
     {{-- Pesan berhasil --}}
     @if (session('success'))
@@ -75,16 +84,38 @@
     @endif
 
     {{-- Statistik --}}
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <p class="text-sm text-slate-500">
-                Jumlah Customer
-            </p>
+    @if (Route::has('admin.customers.index'))
+    <a
+        href="{{ route('admin.customers.index') }}"
+        class="block rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+    >
+        <p class="text-sm text-blue-700">
+            Jumlah Customer
+        </p>
 
-            <p class="mt-2 text-3xl font-bold text-slate-900">
-                {{ number_format($statistics['customers'] ?? 0) }}
-            </p>
-        </div>
+        <p class="mt-2 text-3xl font-bold text-blue-900">
+            {{ number_format(
+                $statistics['customers'] ?? 0
+            ) }}
+        </p>
+
+        <p class="mt-3 text-sm font-semibold text-blue-700">
+            Lihat daftar customer →
+        </p>
+    </a>
+@else
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="text-sm text-slate-500">
+            Jumlah Customer
+        </p>
+
+        <p class="mt-2 text-3xl font-bold text-slate-900">
+            {{ number_format(
+                $statistics['customers'] ?? 0
+            ) }}
+        </p>
+    </div>
+@endif
 
         <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-sm text-slate-500">
